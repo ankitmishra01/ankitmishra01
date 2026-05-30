@@ -22,7 +22,7 @@
 
 I'm an AI-native commercial leader with 13+ years designing global revenue systems and scaling AI adoption across regulated and emerging-market contexts. As a Fractional Chief AI Officer through my consulting practice, I partner with C-suite teams across climate, fintech, and logistics to integrate AI into commercial infrastructure, operations, and go-to-market strategy.
 
-My focus is the operating layer where AI becomes durable enterprise capability — strategy, fluency programs, governance, and the commercial outcomes that justify the investment. I publish on AI governance for Forbes (200k+ readers) and contribute to interdisciplinary research on AI trust at the University of Toronto's Schwartz Reisman Institute alongside researchers from Harvard, BCG, Meta, Mila, and the Government of Ontario.
+My focus is the operating layer where AI becomes durable enterprise capability — strategy, fluency programs, governance, and the commercial outcomes that justify the investment. I publish on AI governance for Forbes (200k+ readers) and contribute to interdisciplinary research on AI trust at the University of Toronto's Schwartz Reisman Institute alongside researchers from Harvard, BCG, Meta, Mila, and the Government of Ontario. My public economic intelligence tools — the AI Trajectory Index, India Household Economy Dashboard, and G20 Economic Monitor — apply the same data rigour to macroeconomic and AI-readiness questions I cover in print.
 
 ---
 
@@ -31,6 +31,8 @@ My focus is the operating layer where AI becomes durable enterprise capability �
 Working tools you can open and use right now:
 
 **[AI Trajectory Index](https://ai-trajectory-index.vercel.app/)** — *"Who is winning the AI race — and who is being left behind?"* A live ranking of **186 economies** on AI readiness and adoption trajectory through 2028. Five pillars: infrastructure, talent, governance, investment, economic strength. Independent research contribution alongside the Schwartz Reisman Institute appointment.
+
+**[G20 Economic Monitor](https://g20-economic-dashboard-gamma.vercel.app/)** — *"24 macro indicators for every G20 economy, live and queryable."* A data-first economic intelligence dashboard covering all 20 G20 members with **24 World Bank and IMF indicators**, IMF forward projections to 2028, a country-level AI Outlook integrated with the AI Trajectory Index, and an AI analyst powered by Claude. Refreshed monthly via GitHub Actions; sources traceable to World Bank Open Data, IMF WEO, OECD, and FRED — no modelling.
 
 **[India Household Economy Dashboard](https://india-household-economy-dashboard.vercel.app/)** — *"India's household economy, made explorable."* Interactive maps and charts across **22 indicators** from government surveys (HCES, PLFS, NFHS-5, Census), covering 14 years of state and union-territory level data. MIT-licensed; sources traceable to government data, not modelling.
 
@@ -85,7 +87,7 @@ Fractional CAIO and growth advisory across climate, fintech, and logistics:
 
 ## AI Architecture Patterns I Work With
 
-Two reference architectures I've designed and adapted across engagements. Diagrams are generic patterns — actual implementations adapt to client constraints, regulatory context, and existing infrastructure.
+Three reference architectures I've designed and adapted across engagements. Diagrams are generic patterns — actual implementations adapt to client constraints, regulatory context, and existing infrastructure.
 
 ### Agentic workflow pattern (with human-in-the-loop)
 
@@ -120,6 +122,23 @@ flowchart LR
     H --> I[Context builder]
     I --> J[LLM with citations]
     J --> K[Grounded response]
+```
+
+### Live data intelligence pattern (multi-source → tiered AI analysis)
+
+Pattern from the G20 Economic Monitor. Multi-source public data pipelines (World Bank, IMF, OECD, FRED) refresh a Supabase store monthly via GitHub Actions. At query time, a local insight engine handles structured lookups — rankings, comparisons, fiscal summaries — without API cost. Complex queries route to Claude with a country-aware context bundle: current indicators, IMF projections, recession risk score, and live news headlines. The two-tier approach keeps the majority of queries free while preserving analytical depth for open-ended questions.
+
+```mermaid
+flowchart LR
+    A[World Bank · IMF · OECD · FRED] --> B[Monthly pipeline\nGitHub Actions]
+    B --> C[(Supabase\n15,000 rows · 24 indicators)]
+    C --> D[Serverless API\nVercel]
+    D --> E[Country context builder\nindicators · projections · risk score · news]
+    E --> F{Query type}
+    F -->|Rankings · comparisons| G[Local insight engine\nno API cost]
+    F -->|Open-ended analysis| H[Claude API\nenriched context]
+    G --> I[Grounded response]
+    H --> I
 ```
 
 ---
